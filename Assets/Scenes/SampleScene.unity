@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 129316642}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -381,9 +381,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   damage: 0
-  rate: 0
+  rate: 0.15
+  maxAmmo: 30
+  curAmmo: 30
   meleeArea: {fileID: 0}
   trailEffect: {fileID: 0}
+  bulletPos: {fileID: 1376451830}
+  bulletCasePos: {fileID: 1660594154}
+  bullet: {fileID: 8843845545343391274, guid: dd32ac829ad884f48b25f2954085605f, type: 3}
+  bulletCase: {fileID: 5802352788459258977, guid: 8423ebae210966d4aa052f1f4f8c327a, type: 3}
 --- !u!1 &590820171
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,7 +778,7 @@ GameObject:
   - component: {fileID: 958493455}
   m_Layer: 0
   m_Name: 'Wall '
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -1025,6 +1031,96 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 203326381d9b54d489646c6c2f61f53a, type: 3}
+--- !u!1 &1245154250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1245154251}
+  m_Layer: 0
+  m_Name: Case Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1245154251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245154250}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.067, y: 0.735, z: -0.164}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1807505760}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1376451829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1376451830}
+  m_Layer: 0
+  m_Name: Bullet Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1376451830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376451829}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 2.5, z: 1.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5903297865783047503}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1660594153
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1660594154}
+  m_Layer: 0
+  m_Name: Case Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1660594154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660594153}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.046, y: 0.72, z: -0.135}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 433670631}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1739355137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1208,9 +1304,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   damage: 0
-  rate: 0
+  rate: 0.4
+  maxAmmo: 7
+  curAmmo: 7
   meleeArea: {fileID: 0}
   trailEffect: {fileID: 0}
+  bulletPos: {fileID: 1376451830}
+  bulletCasePos: {fileID: 1245154251}
+  bullet: {fileID: 2055109472822918145, guid: f15f99844c0d1b94398a2bb40dbfdb87, type: 3}
+  bulletCase: {fileID: 5802352788459258977, guid: 8423ebae210966d4aa052f1f4f8c327a, type: 3}
 --- !u!1 &1825755535 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1348174882345252545, guid: c2ec4bfd1a6491c49a0c34b8dc3a7639, type: 3}
@@ -1236,8 +1338,14 @@ MonoBehaviour:
   type: 0
   damage: 20
   rate: 1
+  maxAmmo: 0
+  curAmmo: 0
   meleeArea: {fileID: 1825755538}
   trailEffect: {fileID: 638263170}
+  bulletPos: {fileID: 0}
+  bulletCasePos: {fileID: 0}
+  bullet: {fileID: 0}
+  bulletCase: {fileID: 0}
 --- !u!65 &1825755538
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1591,6 +1699,34 @@ PrefabInstance:
     - target: {fileID: 3502460179522851821, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
+      propertyPath: ammo
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
+      propertyPath: health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
+      propertyPath: maxAmmo
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
+      propertyPath: maxCoin
+      value: 99999
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
+      propertyPath: maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
+      propertyPath: followCamera
+      value: 
+      objectReference: {fileID: 1755441918}
+    - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
+      propertyPath: maxHasGrenades
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5954651710974556858, guid: 2b3165655f47c9c4d81b7419d646e56e, type: 3}
       propertyPath: weapons.Array.size

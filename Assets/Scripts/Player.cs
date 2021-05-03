@@ -9,6 +9,17 @@ public class Player : MonoBehaviour
     public float dodgeDelay;
     public GameObject[] weapons;
     public bool[] hasWeapons;
+    public Camera followCamera;
+
+    public int ammo;
+    public int coin;
+    public int health;
+    public int hasGrenades;
+
+    public int maxAmmo;
+    public int maxCoin;
+    public int maxHealth;
+    public int maxHasGrenades;
 
     float hAxis;
     float vAxis;
@@ -18,6 +29,7 @@ public class Player : MonoBehaviour
     bool wDown;  //Walk
     bool jDown;  //Jump
     bool fDown;  //Fire;
+    bool rDown;  //Fire;
     bool iDown;  //Interation
     bool sDown1; //Swap1
     bool sDown2; //Swap2
@@ -25,6 +37,7 @@ public class Player : MonoBehaviour
     bool isJump;
     bool isDodge;
     bool isSwap;
+    bool isReload;
     bool isFireReady = true;
 
     Vector3 moveVec;
@@ -48,7 +61,9 @@ public class Player : MonoBehaviour
         GetInput();
         Move();
         Swap();
+        Turn();
         Attack();
+        Reload();
         Interation();
     }
 
@@ -58,7 +73,8 @@ public class Player : MonoBehaviour
         vAxis = Input.GetAxisRaw("Vertical");
         wDown = Input.GetButton("Walk");
         jDown = Input.GetButtonDown("Jump");
-        fDown = Input.GetButtonDown("Fire1");
+        fDown = Input.GetButton("Fire1");
+        rDown = Input.GetButtonDown("Reload");
         iDown = Input.GetButtonDown("Interation");
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
@@ -74,7 +90,7 @@ public class Player : MonoBehaviour
         if (isDodge) //닷지 중일 때
             moveVec = dodgeVec;
 
-        if (isSwap || !isFireReady) //교체, 공격 중일 때
+        if (isSwap || !isFireReady || isReload) //교체, 공격 중일 때
             moveVec = Vector3.zero;
 
         if (wDown) //점프
@@ -112,9 +128,25 @@ public class Player : MonoBehaviour
             //닷지 딜레이
             Invoke("DodgeOut", dodgeDelay);
         }
+    }
 
-        //캐릭터 시점
+    void Turn()
+    {
+        //키보드에 의한 회전
         transform.LookAt(transform.position + moveVec);
+
+        //마우스에 의한 회전
+        if (fDown)
+        {
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
+                Vector3 nextVec = rayHit.point - transform.position;
+                nextVec.y = 0;
+                transform.LookAt(transform.position + nextVec);
+            }
+        }
     }
 
     void DodgeOut()
@@ -144,13 +176,39 @@ public class Player : MonoBehaviour
 
         isFireReady = equipWeapon.rate < fireDelay;
 
-        if (fDown && isFireReady && !isDodge && !isSwap)
+        if (fDown && isFireReady && !isDodge && !isSwap && !isReload)
         {
             equipWeapon.Use();
 
-            anim.SetTrigger("doSwing");
+            anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
             fireDelay = 0;
         }
+    }
+
+    void Reload()
+    {
+        if (equipWeapon == null)
+            return;
+        if(equipWeapon.type == Weapon.Type.Melee)
+            return;
+        if (ammo == 0)
+            return;
+
+        if(rDown && !isJump && !isDodge && !isSwap && isFireReady)
+        {
+            anim.SetTrigger("doReload");
+            isReload = true;
+
+            Invoke("ReloadOut", 2f);
+        }
+    }
+
+    void ReloadOut()
+    {
+        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
+        equipWeapon.curAmmo = reAmmo;
+        ammo -= reAmmo;
+        isReload = false;
     }
 
     //////// 아이템 ////////
@@ -213,6 +271,39 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Item")
+        {
+            Item item = other.GetComponent<Item>();
+
+            switch (item.type)
+            {
+                case Item.Type.Ammo:
+                    ammo += item.value;
+                    if (ammo > maxAmmo)
+                        ammo = maxAmmo;
+                    break;
+                case Item.Type.Coin:
+                    coin += item.value;
+                    if (coin > maxCoin)
+                        coin = maxCoin;
+                    break;
+                case Item.Type.Heart:
+                    health += item.value;
+                    if (health > maxHealth)
+                        health = maxHealth;
+                    break;
+                case Item.Type.Grenade:
+                    hasGrenades += item.value;
+                    if (hasGrenades > maxHasGrenades)
+                        hasGrenades = maxHasGrenades;
+                    break;
+            }
+
+            Destroy(other.gameObject);
+        }
+    }
     void OnTriggerStay(Collider other)
     {
         if (other.tag == "Weapon")
