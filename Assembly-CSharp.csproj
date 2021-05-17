@@ -59,7 +59,7 @@
     <Compile Include="Assets\Scripts\Weapon.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\1QuarterView 3D Action BE5\ReadMe\Scripts\ReadmeBE5.cs" />
-    <Compile Include="Assets\Hold\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\Bullet.cs" />

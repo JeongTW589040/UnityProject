@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     bool isDodge;
     bool isSwap;
     bool isReload;
+    bool isBorder;
     bool isFireReady = true;
 
     Vector3 moveVec;
@@ -93,10 +94,13 @@ public class Player : MonoBehaviour
         if (isSwap || !isFireReady || isReload) //교체, 공격 중일 때
             moveVec = Vector3.zero;
 
-        if (wDown) //점프
-            transform.position += moveVec * speed * 0.3f * Time.deltaTime;
-        else
-            transform.position += moveVec * speed * Time.deltaTime;
+        if (!isBorder)
+        {
+            if (wDown) //점프
+                transform.position += moveVec * speed * 0.3f * Time.deltaTime;
+            else
+                transform.position += moveVec * speed * Time.deltaTime;
+        }
 
         //이동 애니메이션
         anim.SetBool("isRun", moveVec != Vector3.zero);
@@ -271,6 +275,25 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// ////////////////
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void StopToWall()
+    {
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
+
+    }
+
+    void FixedUpdate()
+    {
+        FreezeRotation();
+        StopToWall();
+    }
+
+    //////////////////
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Item")
