@@ -9,12 +9,14 @@ public class Player : MonoBehaviour
     public float dodgeDelay;
     public GameObject[] weapons;
     public bool[] hasWeapons;
+    public GameObject[] grenades;
+    public int hasGrenades;
+    public GameObject grenadeObj;
     public Camera followCamera;
 
     public int ammo;
     public int coin;
     public int health;
-    public int hasGrenades;
 
     public int maxAmmo;
     public int maxCoin;
@@ -29,7 +31,8 @@ public class Player : MonoBehaviour
     bool wDown;  //Walk
     bool jDown;  //Jump
     bool fDown;  //Fire;
-    bool rDown;  //Fire;
+    bool gDown;  //grenade;
+    bool rDown;  //Reload;
     bool iDown;  //Interation
     bool sDown1; //Swap1
     bool sDown2; //Swap2
@@ -40,6 +43,7 @@ public class Player : MonoBehaviour
     bool isReload;
     bool isBorder;
     bool isFireReady = true;
+    bool isDamage;
 
     Vector3 moveVec;
     Vector3 dodgeVec;
@@ -48,6 +52,7 @@ public class Player : MonoBehaviour
     Animator anim;
     GameObject nearObject;
     Weapon equipWeapon;
+    MeshRenderer[] meshs;
 
 
 
@@ -55,6 +60,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        meshs = GetComponentsInChildren<MeshRenderer>();
     }
 
     void Update()
@@ -65,6 +71,7 @@ public class Player : MonoBehaviour
         Turn();
         Attack();
         Reload();
+        Grenade();
         Interation();
     }
 
@@ -75,6 +82,7 @@ public class Player : MonoBehaviour
         wDown = Input.GetButton("Walk");
         jDown = Input.GetButtonDown("Jump");
         fDown = Input.GetButton("Fire1");
+        gDown = Input.GetButtonDown("Fire2");
         rDown = Input.GetButtonDown("Reload");
         iDown = Input.GetButtonDown("Interation");
         sDown1 = Input.GetButtonDown("Swap1");
@@ -215,6 +223,30 @@ public class Player : MonoBehaviour
         isReload = false;
     }
 
+    void Grenade()
+    {
+        if (hasGrenades == 0)
+            return;
+
+        if(gDown && !isReload && !isSwap && !isDodge)
+        {
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
+                Vector3 nextVec = rayHit.point - transform.position;
+                nextVec.y = 10;
+
+                GameObject instantGrenades = Instantiate(grenadeObj, transform.position, transform.rotation);
+                Rigidbody rigidGrenades = instantGrenades.GetComponent<Rigidbody>();
+                rigidGrenades.AddForce(nextVec, ForceMode.Impulse);
+                rigidGrenades.AddTorque(Vector3.back * 10, ForceMode.Impulse);
+
+                hasGrenades--;
+            }
+        }
+    }
+
     //////// æ∆¿Ã≈€ ////////
     void Swap()
     {
@@ -275,25 +307,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    /// ////////////////
-    void FreezeRotation()
-    {
-        rigid.angularVelocity = Vector3.zero;
-    }
-
-    void StopToWall()
-    {
-        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
-
-    }
-
-    void FixedUpdate()
-    {
-        FreezeRotation();
-        StopToWall();
-    }
-
-    //////////////////
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Item")
@@ -323,20 +336,66 @@ public class Player : MonoBehaviour
                         hasGrenades = maxHasGrenades;
                     break;
             }
-
             Destroy(other.gameObject);
         }
+        else if (other.tag == "EnemyBullet")
+        {
+            if (!isDamage)
+            {
+                Bullet enemyBullet = other.GetComponent<Bullet>();
+                health -= enemyBullet.damage;
+                StartCoroutine(OnDamage());
+            }
+        }
     }
+
+    IEnumerator OnDamage()
+    {
+        isDamage = true;
+
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.yellow;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.white;
+        }
+
+        isDamage = false;
+
+    }
+
     void OnTriggerStay(Collider other)
     {
         if (other.tag == "Weapon")
             nearObject = other.gameObject;
     }
+
     void OnTriggerExit(Collider other)
     {
         if (other.tag == "Weapon")
             nearObject = null;
     }
 
-    
+    //////// ETC ////////
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void StopToWall()
+    {
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
+
+    }
+
+    void FixedUpdate()
+    {
+        FreezeRotation();
+        StopToWall();
+    }
 }
