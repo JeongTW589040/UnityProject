@@ -35,7 +35,7 @@ public class Weapon : MonoBehaviour
 
     IEnumerator Swing()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.4f);
         meleeArea.enabled = true;
         trailEffect.enabled = true;
 

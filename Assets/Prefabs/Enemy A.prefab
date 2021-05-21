@@ -76,8 +76,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a8f7ae38a225ad41bbc60c8391ee511, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
-  curHealth: 20
+  maxHealth: 100
+  curHealth: 100
   target: {fileID: 0}
   isChase: 0
 --- !u!195 &890242395100177930
