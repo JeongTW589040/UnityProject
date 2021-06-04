@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+
 	public enum Type { A, B, C };
 	public Type enemyType;
 	public int maxHealth;
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
 
 	public bool isChase;
 	public bool isAttack;
+	public bool isDie;
 
 	Rigidbody rigid;
 	BoxCollider boxCollider;
@@ -23,9 +25,7 @@ public class Enemy : MonoBehaviour
 	NavMeshAgent nav;
 	Animator anim;
 
-
-
-	void Awake()
+	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody>();
 		boxCollider = GetComponent<BoxCollider>();
@@ -91,6 +91,7 @@ public class Enemy : MonoBehaviour
 			gameObject.layer = 12;  //EnemyDead
 			isChase = false;
 			nav.enabled = false;
+			isDie = true;
 			anim.SetTrigger("doDie");
 
             if (isGrenade)

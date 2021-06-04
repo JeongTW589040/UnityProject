@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public int ammo;
     public int coin;
     public int health;
+    public int score;
 
     public int maxAmmo;
     public int maxCoin;
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Animator anim;
     GameObject nearObject;
-    Weapon equipWeapon;
+    public Weapon equipWeapon;
     MeshRenderer[] meshs;
 
 
